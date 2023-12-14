@@ -51,7 +51,8 @@ const SignUp = () => {
             type: 'signup',
             email: loginForm.email,
             options: {
-                emailRedirectTo: 'http://localhost:3000/'
+                emailRedirectTo: 'https://frontend-productivity-app.vercel.app/'
+                // emailRedirectTo: 'http://localhost:3000/'
             }
         })
 
