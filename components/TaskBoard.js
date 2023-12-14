@@ -30,7 +30,7 @@ const TaskBoard = ({ tasks = []}) => {
                         break;
                     }
                     return (
-                        <TaskItem>
+                        <TaskItem key={`task-${index}`}>
                           <FlexBox justify={'space-between'} className={'task-top-section'}>
                             <div className={'task-name'}> {task.name} </div>
                             <div> <Tag color={tagColor}> {task.status}</Tag></div>

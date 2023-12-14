@@ -36,7 +36,7 @@ const Header = () => {
             {/* Your component content here */}
 
             <div className={'left-side'}>
-                Can't think of a name yet
+                {` Can't think of a name yet`}
             </div>
             {
                 user

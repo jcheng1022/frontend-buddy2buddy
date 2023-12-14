@@ -55,7 +55,7 @@ const FriendRequestList = () => {
                 </div>
             ) : (friends?.map((request, index) => {
                 return (
-                    <RequestItem>
+                    <RequestItem key={`accepted-friend-${request.id}`}>
                         <FlexBox className={'user-section'} gap={24} wrap={'no-wrap'}>
 
                             <div className={'user-logo-container'}>
