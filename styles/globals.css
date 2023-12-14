@@ -1,0 +1,19 @@
+:root {
+    padding:0;
+    margin: 0;
+    height: 100%;
+}
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color:#2E2F2F;
+
+}
