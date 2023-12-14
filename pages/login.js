@@ -11,6 +11,7 @@ import {supabase} from "@/services/supabase";
 const Login = () => {
     const [loginForm, setLoginForm] = useState({})
     const router = useRouter();
+    const [err, setErr] = useState({})
     const handleChange = (name) => (e) => {
         setLoginForm({
             ...loginForm,
@@ -20,6 +21,7 @@ const Login = () => {
     }
 
     const handleSubmit = async (e) => {
+        setErr({})
 
 
         if (!loginForm.email | !loginForm.password) {
@@ -29,18 +31,23 @@ const Login = () => {
                 duration: 3
             })
         }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(loginForm.email)) {
+            setErr({
+                ...err,
+                email: 'Not a valid email'
+            })
+            return;
+        }
 
         const {data, error} = await supabase.auth.signInWithPassword({
             email: loginForm.email,
             password: loginForm.password
         })
 
-        if (!data) {
-            console.log(error, 'error')
-            await notification.error({
-                message: 'Something went wrong',
-                description: 'failed',
-                duration: 3
+        if (error) {
+            setErr({
+                ...err,
+                account: 'Invalid credentials'
             })
         } else {
             await router.push('/')
@@ -57,8 +64,12 @@ const Login = () => {
                  <FlexBox className={'input-container'} direction={'column'} gap={12} style={{width: '100%'}}>
                      <div >  Email</div>
                      <Input className={'inputs'} value={loginForm?.email} onChange={handleChange('email')}/>
+                     {err?.email && <div style={{fontSize:12, color: "red"}}> {err?.email} </div> }
+
                      <div >  Password </div>
-                     <Input className={'inputs'} value={loginForm?.password} onChange={handleChange('password')}/>
+                     <Input className={'inputs'} type={'password'} value={loginForm?.password} onChange={handleChange('password')}/>
+
+                     {err?.account && <div style={{fontSize:12, color: "red"}}> {err?.account} </div> }
                      <Button onClick={handleSubmit}> Log In</Button>
 
                      <FlexBox direction={'column'} gap={4}>

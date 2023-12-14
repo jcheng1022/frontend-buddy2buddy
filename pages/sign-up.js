@@ -10,6 +10,7 @@ import {supabase} from "@/services/supabase";
 
 const SignUp = () => {
     const [loginForm, setLoginForm] = useState({})
+    const [err, setErr] = useState({})
     const [awaitingEmailVerification, setEmailVerification] = useState(false)
     const [resent, setResent] = useState(false)
     const router = useRouter();
@@ -22,7 +23,6 @@ const SignUp = () => {
     }
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
 
         if (!loginForm.email | !loginForm.password) {
             return notification.error({
@@ -31,12 +31,40 @@ const SignUp = () => {
                 duration: 3
             })
         }
+
+        setErr({})
+
+
+        if (!loginForm.email | !loginForm.password) {
+            return notification.error({
+                message: 'Missing Fields',
+                description: 'Both email and password are required',
+                duration: 3
+            })
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(loginForm.email)) {
+            setErr({
+                ...err,
+                email: 'Not a valid email'
+            })
+            return;
+        }
        try{
            const {data, error} = await supabase.auth.signUp({
                email: loginForm.email,
                password: loginForm.password
            })
-           setEmailVerification(true)
+
+           if (error) {
+               setErr({
+                   ...err,
+                   account: 'Invalid credentials'
+               })
+           } else {
+               setEmailVerification(true)
+           }
+
+
        } catch (e) {
            return notification.error({
                message: 'Error',
@@ -92,9 +120,14 @@ const SignUp = () => {
                             <FlexBox className={'input-container'} direction={'column'} gap={12} style={{width: '100%'}}>
                                 <div >  Email</div>
                                 <Input className={'inputs'} value={loginForm?.email} onChange={handleChange('email')}/>
+                                {err?.email && <div style={{fontSize:12, color: "red"}}> {err?.email} </div> }
+
                                 <div >  Password </div>
 
-                                <Input className={'inputs'} value={loginForm?.password} onChange={handleChange('password')}/>
+                                <Input className={'inputs'} type={'password'} value={loginForm?.password} onChange={handleChange('password')}/>
+
+                                {err?.account && <div style={{fontSize:12, color: "red"}}> {err?.account} </div> }
+
                                 <Button onClick={handleSubmit}> Sign Up</Button>
 
                                 <FlexBox direction={'column'} gap={4}>

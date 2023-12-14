@@ -10,6 +10,8 @@ import {useAuthContext} from "@/context/auth.context";
 import {theme} from "@/styles/themes";
 
 
+const MIN_USERNAME_LENGTH = 6
+const MAX_USERNAME_LENGTH = 12
 const FinishProfile  = () => {
     const client = useQueryClient();
     const router = useRouter();
@@ -42,6 +44,11 @@ const FinishProfile  = () => {
 
             return false;
         }
+        if (profile?.username.length < MIN_USERNAME_LENGTH || profile?.username.length > MAX_USERNAME_LENGTH) {
+            setError('Usernames must be between 6 and 12 characters')
+
+            return false;
+        }
 
 
         return true;
@@ -69,6 +76,7 @@ const FinishProfile  = () => {
 
     return (
         <Container
+            keyboard={false}
             open={finishProfile}
             onCancel={() => setFinishProfile(false)}
             closable={false}

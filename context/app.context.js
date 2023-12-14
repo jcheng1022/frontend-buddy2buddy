@@ -1,8 +1,6 @@
 import React, {createContext, useContext, useState} from 'react';
 import TaskModal from "@/components/TaskModal";
-import {useAuthContext} from "@/context/auth.context";
 import WelcomeModal from "@/components/WelcomeModal";
-import {useRouter} from "next/router";
 import APIClient from '../services/api'
 import {notification} from "antd/lib";
 import {useQueryClient} from "react-query";

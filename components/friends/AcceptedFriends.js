@@ -54,14 +54,15 @@ const FriendRequestList = () => {
                     />
                 </div>
             ) : (friends?.map((request, index) => {
+                const friendUser = request?.recipient?.id === userId ? request?.sender : request?.recipient
                 return (
                     <RequestItem key={`accepted-friend-${request.id}`}>
                         <FlexBox className={'user-section'} gap={24} wrap={'no-wrap'}>
 
                             <div className={'user-logo-container'}>
-                                <div className={'user-logo'}> { !!request?.sender?.username && request?.sender?.username[0].toUpperCase()}</div>
+                                <div className={'user-logo'}> { !!friendUser?.username && friendUser?.username[0].toUpperCase()}</div>
                             </div>
-                            <div className={'user-username'}> {request?.sender?.username}</div>
+                            <div className={'user-username'}> {friendUser?.username}</div>
                             <FlexBox justify={'flex-end'} gap={12}style={{marginRight: 12}} onClick={ () => console.log(`hi`) }>
 
                                 {/*<div>*/}
@@ -86,7 +87,7 @@ export default FriendRequestList;
 const Container = styled.div``
 
 const RequestItem = styled(FlexBox)`
-
+  margin-bottom: 18px;
 
 .user-username {
   letter-spacing: 1px;

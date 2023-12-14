@@ -88,6 +88,7 @@ const Container = styled.div``
 
 const RequestItem = styled(FlexBox)`
 
+  margin-bottom: 12px;
 
 .user-username {
   letter-spacing: 1px;

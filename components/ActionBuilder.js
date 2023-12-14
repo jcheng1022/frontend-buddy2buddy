@@ -2,8 +2,9 @@ import styled from 'styled-components';
 import {Button} from "antd/lib";
 import {FlexBox} from "@/components/common";
 import {useAppContext} from "@/context/app.context";
+import {theme} from "@/styles/themes";
 
-const ActionBuilder = ({arr = [], setArr, buttons = []}) => {
+const ActionBuilder = ({arr = [], setArr, buttons = null}) => {
 
     const {completeTasks, moveToTrash} = useAppContext();
 
@@ -12,25 +13,31 @@ const ActionBuilder = ({arr = [], setArr, buttons = []}) => {
         setArr([])
     }
 
+    let btnConfig;
+
+    if (buttons) {
+        btnConfig = buttons;
+    } else {
+        btnConfig = [
+            {
+                onClick:  completeTasks(arr),
+                className: 'btn complete-btn',
+                label: `Complete ${arr.length} tasks`
+            },
+            {
+                onClick: moveToTrash(arr),
+                className: 'btn delete-btn',
+                label: `Delete ${arr.length} tasks`
+            },
+            {
+                onClick: handleUnselect,
+                className: 'btn unselect-btn',
+                label: `Unselect ${arr.length} tasks`
+            },
+        ]
+    }
 
 
-    const btnConfig = [
-        {
-            onClick:  completeTasks(arr),
-            className: 'btn complete-btn',
-            label: `Complete ${arr.length} tasks`
-        },
-        {
-            onClick: moveToTrash(arr),
-            className: 'btn delete-btn',
-            label: `Delete ${arr.length} tasks`
-        },
-        {
-            onClick: handleUnselect,
-            className: 'btn unselect-btn',
-            label: `Unselect ${arr.length} tasks`
-        },
-    ]
 
 
     return (
@@ -65,6 +72,9 @@ const Container = styled(FlexBox)`
     font-weight: 600;
   }
 
+  .restore-btn {
+    background-color: ${theme.lilac};
+  }
   .complete-btn {
     background-color:#96E6B3;
 

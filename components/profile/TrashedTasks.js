@@ -9,15 +9,7 @@ const TrashedTasks = () => {
     const {data: tasks} = useTasksByRange('trashed')
     const [selectedTasks, setSelectedTasks] = useState([])
     const {restoreTasks} = useAppContext();
-    const handleSelectTask = (taskId) => {
-        const isTaskSelected = selectedTasks.includes(taskId);
 
-        if (isTaskSelected) {
-            setSelectedTasks((prevSelectedTasks) => prevSelectedTasks.filter((id) => id !== taskId));
-        } else {
-            setSelectedTasks((prevSelectedTasks) => [...prevSelectedTasks, taskId]);
-        }
-    }
 
     const handleUnselect = () => {
         setSelectedTasks([])
@@ -29,11 +21,6 @@ const TrashedTasks = () => {
             className: 'btn restore-btn',
             label: `Restore ${selectedTasks.length} tasks`
         },
-        // {
-        //     onClick: moveToTrash(selectedTasks),
-        //     className: 'btn delete-btn',
-        //     label: `Delete ${selectedTasks.length} tasks`
-        // },
         {
             onClick: handleUnselect,
             className: 'btn unselect-btn',
