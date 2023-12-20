@@ -9,7 +9,7 @@ import {useUserMenuData} from "@/hooks/users.hook";
 import APIClient from '../../services/api'
 import {useQueryClient} from "react-query";
 import {useEffect, useState} from "react";
-import {Collapse, notification, Progress} from "antd/lib";
+import {Collapse, Input, notification, Progress} from "antd/lib";
 import {useSearchParams} from "next/navigation";
 import {supabase} from "@/services/supabase";
 
@@ -39,6 +39,19 @@ const ProfileSideMenu = () => {
 
 
     }, [])
+
+    useEffect(() => {
+        if (newlyCreatedIndex !== null) {
+            const inputElement = document.getElementById(`subtask-input-${newSubtaskIndex - 2}`);
+            if (inputElement) {
+                inputElement.focus();
+            }
+
+            // // Reset the newSubtaskIndex after focusing
+            // setNewlyCreatedIndex(null);
+        }
+    }, [menuData])
+
   const handleAddBatch = () => {
       setIsAdding(true)
       return APIClient.api.post('/batches').then( async () => {
@@ -90,7 +103,7 @@ const ProfileSideMenu = () => {
       },
       { label: 'Friends',
           icon: <Users size={18} />,
-          extra: <div style={{marginLeft: 4}}> ({menuData?.friendCount?.count})</div>
+          // extra: <div style={{marginLeft: 4}}> ({menuData?.friendCount?.count})</div>
       },
       { label: 'Important',
           icon: <Zap size={18} />
@@ -166,6 +179,7 @@ const ProfileSideMenu = () => {
                                    <div className={'batch-icon'}>
                                        <Folder size={18}/>
                                    </div>
+                                   {/*<Input id={`batch-name-${index}`} value={batch.name}  disabled={true} placeholder={`Untitled`} bordered={false} onChange={() => {}}/>*/}
                                    <div className={'batch-name'}>
                                        {batch.name}
                                    </div>

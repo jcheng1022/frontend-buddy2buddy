@@ -41,16 +41,34 @@ const FriendModal = () => {
         await APIClient.api.post(`/user/friends/${friendId}`).then(() => {
             setIsSending(false)
             setOpenFriendModal(false)
-        }).catch((e) => {
+        }).catch(async(e) => {
             setIsSending(false)
+            await notification.error({
+                message: 'Failed',
+                description :  e.message,
+                duration:3,
+                placement:'bottomRight'
+            })
         })
     }
 
     const handleChange = (e) => {
         setFriendUsername(e.target.value)
     }
+    const handleCancel = () => {
+        if (friendUsername) {
+            setFriendUsername('')
+
+        }
+
+        if (friendResults?.length > 0) {
+            setFriendResults([])
+
+        }
+        setOpenFriendModal(false)
+    }
     return (
-        <Container open={openFriendModal} onClose={() => setOpenFriendModal(false)}>
+        <Container open={openFriendModal} onCancel={handleCancel}>
 
             <div> Find Friends</div>
             <Search

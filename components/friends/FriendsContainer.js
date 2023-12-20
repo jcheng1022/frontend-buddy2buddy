@@ -22,14 +22,13 @@ const FriendsContainer = () => {
 
         supabase
             .channel('friends')
-            .on('postgres_changes', { event: '*', schema: 'public', table:'friends' }, payload => {
-
-                client.refetchQueries(['friends', userId, 'counts']);
+            .on('postgres_changes', { event: '*', schema: 'public', table:'friends' }, async payload => {
+                await client.refetchQueries(['friends', userId, 'counts']);
             })
             .subscribe();
 
 
-    }, [])
+    }, [supabase])
 
 
     return (

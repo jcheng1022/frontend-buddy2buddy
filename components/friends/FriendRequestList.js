@@ -69,7 +69,7 @@ const FriendRequestList = () => {
                                     <Check color={theme.lightGreen}/>
                                 </div>
 
-                                <X color={theme.red} onClick={handleRequest(request?.id, 'DECLINED')} />
+                                <X color={theme.red} onClick={handleRequest(request?.requestedBy, 'DECLINED')} />
 
 
                                 {/*{isSending ? <Loader /> : <Plus />}*/}

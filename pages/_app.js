@@ -7,6 +7,7 @@ import isToday from 'dayjs/plugin/isToday'
 import dayjs from "dayjs";
 import TaskContextProvider from "@/context/task.context";
 import {useState} from "react";
+import Head from "next/head";
 
 dayjs.extend(isToday)
 
@@ -17,14 +18,19 @@ export default function App({ Component, pageProps }) {
 
 
     return(
-      <QueryClientProvider client={client}>
-        <AuthContextProvider>
-            <AppContextProvider>
-               <TaskContextProvider>
-                   <Component {...pageProps} />
-               </TaskContextProvider>
-            </AppContextProvider>
-        </AuthContextProvider>
-      </QueryClientProvider>
+      <>
+          <Head>
+              <title></title>
+          </Head>
+          <QueryClientProvider client={client}>
+              <AuthContextProvider>
+                  <AppContextProvider>
+                      <TaskContextProvider>
+                          <Component {...pageProps} />
+                      </TaskContextProvider>
+                  </AppContextProvider>
+              </AuthContextProvider>
+          </QueryClientProvider>
+      </>
   )
 }

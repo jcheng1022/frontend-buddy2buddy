@@ -6,11 +6,13 @@ import {notification} from "antd/lib";
 import {useQueryClient} from "react-query";
 import {useSearchParams} from "next/navigation";
 import FriendModal from "@/components/profile/FriendModal";
+import CollaboratorModal from "@/components/common/CollaboratorModal";
 
 const AppContextProvider = ({ children }) => {
     const [createNewTask, setCreateNewTask] = useState(false)
     const [welcomeModal, setWelcomeModal] = useState(false)
     const [openFriendModal, setOpenFriendModal] = useState(false)
+    const [openCollabModal, setOpenCollabModal] = useState(false)
     const client = useQueryClient()
     const searchParams = useSearchParams();
     const selectedTab = searchParams.get('tab')
@@ -58,10 +60,18 @@ const AppContextProvider = ({ children }) => {
         moveToTrash,
         restoreTasks,
         openFriendModal,
-        setOpenFriendModal
+        setOpenFriendModal,
+        openCollabModal,
+        setOpenCollabModal
     };
 
-    return <BaseContext.Provider value={settings}>{children}{createNewTask && <TaskModal/>} {openFriendModal && <FriendModal/> } <WelcomeModal /></BaseContext.Provider>;
+    return <BaseContext.Provider value={settings}>
+        {children}
+        {createNewTask && <TaskModal/>}
+        {openFriendModal && <FriendModal/> }
+        {openCollabModal && <CollaboratorModal/>}
+        <WelcomeModal />
+    </BaseContext.Provider>;
 }
 
 const BaseContext = createContext(null);

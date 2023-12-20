@@ -21,20 +21,18 @@ const FriendRequestList = () => {
 
     useEffect(() => {
 
-        const channel = supabase
+        supabase
             .channel(`accepted-friends`)
             // .on('postgres_changes', { event: '*', schema: 'public', tables: ['batches', 'tasks'] }, payload => {
 
-                .on('postgres_changes', { event: '*', schema: 'public', table:'friends' }, payload => {
+                .on('postgres_changes', { event: '*', schema: 'public', table:'friends' }, async payload => {
 
-                client.refetchQueries(['friends', userId, 'ACCEPTED']);
+                await client.refetchQueries(['friends', userId, 'ACCEPTED']);
             })
             .subscribe();
 
-        return () => supabase.removeChannel( channel)
 
-
-    }, [])
+    }, [supabase])
 
     // const handleRequest = (friendId, result = 'ACCEPTED')  => async () => {
     //     await APIClient.api.patch(`user/friends/${friendId}/status/${result}`)

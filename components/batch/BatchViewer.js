@@ -3,26 +3,53 @@ import {useSearchParams} from "next/navigation";
 import {useBatchById} from "@/hooks/batches.hooks";
 import {theme} from "@/styles/themes";
 import {FlexBox} from "@/components/common";
-import {CheckSquare, ChevronRight, Square} from "react-feather";
+import {CheckSquare, ChevronRight, Edit, Edit2, Edit3, Globe, Plus, Square, Users} from "react-feather";
 import {useEffect, useState} from "react";
-import {Button, Checkbox} from "antd/lib";
+import {Button, Checkbox, Input, notification} from "antd/lib";
 import ActionBuilder from "@/components/ActionBuilder";
 import {useAppContext} from "@/context/app.context";
 import TaskViewerDrawer from "@/components/tasks/TaskViewerDrawer";
 import {supabase} from "@/services/supabase";
 import {useQueryClient} from "react-query";
-
+import APIClient from '../../services/api'
 const BatchViewer = () => {
     const search = useSearchParams();
     const client = useQueryClient();
+    const [isLoading, setIsLoading] = useState(false)
+    const [isEditing, setIsEditing] = useState(false)
     const [hoveredTask, setHoveredTask] = useState(null)
     const [selectedTasks, setSelectedTasks] = useState([])
-    const {completeTasks, moveToTrash, setCreateNewTask} = useAppContext();
+    const {completeTasks, moveToTrash, setCreateNewTask, setOpenCollabModal} = useAppContext();
     const [viewTask, setViewTask] = useState(null)
     const batchId = search.get('batch')
     const {data: batch} = useBatchById(batchId,  {
         withTasks: true
     })
+
+    const [form, setForm] = useState({})
+
+    useEffect(() => {
+        if (batch) {
+            setForm({
+                ...form,
+                name: batch?.name
+            })
+        }
+    }, [batch])
+
+    useEffect(() => {
+
+        if (isEditing) {
+            const inputElement = document.getElementById(`batch-name-input`);
+            if (inputElement) {
+                inputElement.focus();
+                inputElement.select(); // Select the content
+
+            }
+
+        }
+
+    }, [isEditing])
     useEffect(() => {
         supabase
             .channel('batch-task-updates')
@@ -67,13 +94,71 @@ const BatchViewer = () => {
     ]
 
     const statusOrder = ['INCOMPLETE', 'PENDING', 'COMPLETE'];
+    const handleSubmitChanges = () => {
 
+        if (!form.name) return;
+
+        if (form?.name === batch?.name) {
+            setIsEditing(false);
+            return;
+        }
+
+        setIsLoading(true)
+
+        return APIClient.api.patch(`/batches/${batch?.id}`, form).then(() => {
+            setIsLoading(false)
+            notification.success({
+                message: 'Updated',
+                duration: 5,
+                placement: 'bottomRight'
+            })
+        })
+    }
+
+    const handleCancel = () => {
+        setIsEditing(false)
+        setForm({
+            name: batch?.name
+        })
+    }
     return (
         <Container>
-            <FlexBox justify={'space-between'}>
-                <div className={'name'}> {batch?.name} </div>
-                <Button onClick={() => setCreateNewTask(true)}> New Task</Button>
+            <FlexBox >
+                <Input className={'input-name'}
+                       id={`batch-name-input`}
+                       readOnly={!isEditing}
+                       value={form?.name}
+                       loading={!!isLoading}
+                       bordered={false}
+                       onChange={(e) => setForm({
+                           ...form,
+                           name: e.target.value
+                       })}
+                />
 
+
+                <FlexBox justify={'flex-end'} gap={12} wrap={'no-wrap'}>
+
+                    {isEditing ?
+                        <>
+                            <Button className={'batch-btn'} onClick={handleCancel} > Cancel </Button>
+                            <Button className={'batch-btn'} onClick={handleSubmitChanges}> Save </Button>
+
+                        </>
+                        :
+                        <>
+                            <Button className={'batch-btn'} onClick={() => setIsEditing(true)}> <Edit3/> </Button>
+                            <Button className={'batch-btn'} onClick={() => setOpenCollabModal(true)}> <Users/> </Button>
+                            <Button className={'batch-btn'} onClick={() => setCreateNewTask(true)}> <Plus /> </Button>
+
+                        </>
+                    }
+
+
+
+
+
+                </FlexBox>
             </FlexBox>
             <div className={'description'}> {batch?.description} </div>
             {selectedTasks?.length > 0 && <ActionBuilder arr={selectedTasks} setArr={setSelectedTasks}  />}
@@ -120,6 +205,21 @@ const Container = styled.div`
     color: ${theme.steel20};
     
   }
+  .input-name {
+    max-width: 60%;
+    font-size: 36px;
+    color: ${theme.steel10};
+    padding: 0;
+    cursor: auto;
+
+  }
+  
+  .batch-btn {
+    padding: 4px 12px;
+    min-width: 65px;
+    max-width: 65px;
+    //width: 100px;
+  }
 `
 
 const TaskContainer = styled(FlexBox)`
@@ -151,7 +251,9 @@ const TaskContainer = styled(FlexBox)`
     opacity: 1; /* Show the chevron on hover */
     //visibility: visible;
   }
+
   .name { 
+    max-width: 60%;
     font-size: 16px;
   }
 `
