@@ -3,23 +3,24 @@ import {supabase} from '@/services/supabase';
 import {Modal, notification} from 'antd/lib';
 import {useRouter} from "next/router";
 import APIClient from "@/services/api";
-import FinishProfile from "@/components/FinishProfile";
+import {useUserBuddies} from "@/hooks/users.hook";
 
 
 const AuthContextProvider = ({ children }) => {
 
     const [user, setUser] = useState(null);
-    const [finishProfile, setFinishProfile] = useState(false)
     const router = useRouter();
+    // const {data: buddies} = useUserBuddies(user?.id)
+    // console.log(buddies, `auth`)
 
 
-    useEffect(() => {
-        if (user) {
-            if (!user.username || !user.firstName || !user.lastName) {
-                setFinishProfile(true)
-            }
-        }
-    }, [user])
+    // useEffect(() => {
+    //     if (user) {
+    //         if (!user.username || !user.firstName || !user.lastName) {
+    //             setFinishProfile(true)
+    //         }
+    //     }
+    // }, [user])
 
 
     useEffect(() => {
@@ -34,11 +35,11 @@ const AuthContextProvider = ({ children }) => {
                     }
                 } catch(e) {
 
-                        notification.error({
-                            message: 'Error with authentication',
-                            description: e.message,
-                            duration: 5
-                        })
+                    notification.error({
+                        message: 'Error with authentication',
+                        description: e.message,
+                        duration: 5
+                    })
 
 
 
@@ -50,7 +51,7 @@ const AuthContextProvider = ({ children }) => {
 
     useEffect(() => {
         supabase.auth.getSession().then(async ({ data: { session } }) => {
-
+            console.log(`session`, session)
             if (session) {
                 try {
                     const res = await APIClient.api.get('/user/me')
@@ -60,7 +61,8 @@ const AuthContextProvider = ({ children }) => {
 
                     }
                 } catch(e) {
-                        setUser(null)
+                    console.log(`Error getting session: `, e)
+                    setUser(null)
 
 
 
@@ -95,12 +97,11 @@ const AuthContextProvider = ({ children }) => {
     const settings = {
         user,
         signOut,
-        finishProfile,
-        setFinishProfile,
+
         setUser
     };
 
-    return <BaseContext.Provider value={settings}>{children}<FinishProfile/></BaseContext.Provider>;
+    return <BaseContext.Provider value={settings}>{children}</BaseContext.Provider>;
 }
 
 const BaseContext = createContext(null);

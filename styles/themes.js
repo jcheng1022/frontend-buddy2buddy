@@ -1,4 +1,8 @@
 export const theme = {
+
+    softBlack: '#323232',
+    lightGrey: '#858585',
+    green: '#059719',
     coolGray: '#A09ABC',
     lilac: '#B6A6CA',
     lavender: '#D5CFE1',

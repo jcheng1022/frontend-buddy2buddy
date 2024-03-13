@@ -1,76 +1,58 @@
 import React, {createContext, useContext, useState} from 'react';
-import TaskModal from "@/components/TaskModal";
-import WelcomeModal from "@/components/WelcomeModal";
-import APIClient from '../services/api'
-import {notification} from "antd/lib";
-import {useQueryClient} from "react-query";
-import {useSearchParams} from "next/navigation";
-import FriendModal from "@/components/profile/FriendModal";
-import CollaboratorModal from "@/components/common/CollaboratorModal";
+import AddToPlanModal from "@/components/modals/AddToPlanModal";
 
 const AppContextProvider = ({ children }) => {
-    const [createNewTask, setCreateNewTask] = useState(false)
-    const [welcomeModal, setWelcomeModal] = useState(false)
-    const [openFriendModal, setOpenFriendModal] = useState(false)
-    const [openCollabModal, setOpenCollabModal] = useState(false)
-    const client = useQueryClient()
-    const searchParams = useSearchParams();
-    const selectedTab = searchParams.get('tab')
 
-    const handleClickNewTask = () => {
-        if (welcomeModal) {
-            // close modal if open
-            setWelcomeModal(false)
-        }
+    const [yelpResults, setYelpResults] = useState([])
+    const [location, setLocation] = useState(null);
+    const [isSearching, setIsSearching] = useState(false)
+    const [openCreatePlan, setOpenCreatePlan] = useState(false)
+    const [openAddBuddy, setOpenAddBuddy] = useState(false)
+    const [showAddToPlanModal, setShowAddToPlanModal] = useState(false)
 
-        setCreateNewTask(true);
+    const closeAddToPlanModal = () => {
+        setShowAddToPlanModal(false)
+    }
+    const openAddToPlanModal = () => {
+        setShowAddToPlanModal(true)
     }
 
-    const completeTasks = (arr) => async () => {
-        if (!arr || arr.length === 0) return;
-
-        await APIClient.api.patch('/tasks/complete', arr)
-    }
-    const moveToTrash = (arr) => async () => {
-        if (!arr || arr.length === 0) return;
-
-        await APIClient.api.patch('/tasks/trash', arr).then(async () =>{
-            await client.refetchQueries(['tasks', 'today']);
-            await notification.success({message:'success', description:'Tasks have been moved to trash', duration:5})
-        })
+    const openAddBuddyModal = () => {
+        setOpenAddBuddy(true)
     }
 
-    const restoreTasks = (arr) => async () => {
-        if (!arr || arr.length === 0) return;
-
-        await APIClient.api.patch('/tasks/restore', arr).then(async () =>{
-            await notification.success({message:'success', description:'Tasks have been restored', duration:5})
-        })
+    const closeBuddyModal = () => {
+        setOpenAddBuddy( false)
     }
-
+    const openCreatePlanModal = () => {
+        setOpenCreatePlan(true)
+    }
+    const closeCreatePlan = () => {
+        setOpenCreatePlan(prev => !prev)
+    }
 
     const settings = {
-        selectedTab,
-       createNewTask,
-        setCreateNewTask,
-        welcomeModal,
-        setWelcomeModal,
-        handleClickNewTask,
-        completeTasks,
-        moveToTrash,
-        restoreTasks,
-        openFriendModal,
-        setOpenFriendModal,
-        openCollabModal,
-        setOpenCollabModal
+        yelpResults,
+        setYelpResults,
+        location,
+        setLocation,
+        isSearching,
+        setIsSearching,
+        openCreatePlan,
+        closeCreatePlan,
+        openCreatePlanModal,
+        openAddBuddy,
+        closeBuddyModal,
+        openAddBuddyModal,
+        openAddToPlanModal,
+        closeAddToPlanModal,
+        showAddToPlanModal
     };
 
     return <BaseContext.Provider value={settings}>
         {children}
-        {createNewTask && <TaskModal/>}
-        {openFriendModal && <FriendModal/> }
-        {openCollabModal && <CollaboratorModal/>}
-        <WelcomeModal />
+        { showAddToPlanModal && <AddToPlanModal open={showAddToPlanModal} onClose={closeAddToPlanModal} />}
+
     </BaseContext.Provider>;
 }
 

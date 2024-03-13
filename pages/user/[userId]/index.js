@@ -1,130 +1,78 @@
 import styled from "styled-components";
 import Layout from "@/layouts";
-import ProfileLayout from "@/layouts/profileLayout";
-import {useAppContext} from "@/context/app.context";
-import TodayTasks from "@/components/profile/TodayTasks";
-import AllTasks from "@/components/profile/AllTasks";
-import ImportantTasks from "@/components/profile/ImportantTasks";
-import PendingTasks from "@/components/profile/PendingTasks";
-import {theme} from "@/styles/themes";
-import TrashedTasks from "@/components/profile/TrashedTasks";
-import {useSearchParams} from "next/navigation";
-import BatchViewer from "@/components/batch/BatchViewer";
+import {useAuthContext} from "@/context/auth.context";
+
+import { Calendar, dayjsLocalizer } from 'react-big-calendar'
+import dayjs from 'dayjs'
+import 'react-big-calendar/lib/css/react-big-calendar.css'
+import {useUserProfile} from "@/hooks/users.hook";
+import PlansSection from "@/components/profile/HangoutSection";
 import {FlexBox} from "@/components/common";
 import {Button} from "antd/lib";
-import FriendsContainer from "@/components/friends/FriendsContainer";
+import {useAppContext} from "@/context/app.context";
+import CreatePlanModal from "@/components/modals/CreatePlanModal";
+
+const localizer = dayjsLocalizer(dayjs)
+
 
 const UserProfilePage = () => {
-    const {selectedTab, setCreateNewTask} = useAppContext();
-    const searchParams = useSearchParams();
-    const batchId = searchParams.get('batch')
-    const taskId = searchParams.get('task')
-
-    let pageType = null;
-    if (!taskId && !!batchId) {
-        pageType = 'batch'
-    } else if (!batchId && !!taskId) {
-        pageType = 'task'
-    } else if (!!batchId && !!taskId) {
-        pageType = 'batch-task'
-    }
-
-
-
-
-    let contentToRender;
-
-    if (pageType === 'batch') {
-        // Render batch content
-        contentToRender = <BatchViewer/>;
-    } else if (pageType === 'task') {
-        // Render task content
-        contentToRender = <div> task page </div>;
-    } else if (pageType === 'batch-task') {
-        // Render batch-task content
-        contentToRender = <div> batch task page </div>;
-    } else {
-        // Render based on selectedTab when pageType is null
-        if (selectedTab === 'today') {
-            contentToRender = <TodayTasks />;
-        } else if (selectedTab === 'friends') {
-            contentToRender = <FriendsContainer />;
-        } else if (selectedTab === 'all') {
-            contentToRender = <AllTasks />;
-        } else if (selectedTab === 'important') {
-            contentToRender = <ImportantTasks />;
-        } else if (selectedTab === 'pending') {
-            contentToRender = <PendingTasks />;
-        } else if (selectedTab === 'trash') {
-            contentToRender = <TrashedTasks />;
-        }
-    }
-
-    let getWelcomeText;
-    if (selectedTab === 'today') {
-        getWelcomeText =  `Here's your tasks for today!`
-
-    } else if (selectedTab === 'friends') {
-        getWelcomeText =`Your friends`
-
-    }else if (selectedTab === 'all') {
-        getWelcomeText =`All your planned tasks`
-
-    }else if (selectedTab === 'important') {
-        getWelcomeText = `Your important tasks`
-
-    }else if (selectedTab === 'pending') {
-        getWelcomeText = `Your tasks waiting to be started`
-
-    }else if (selectedTab === 'trash') {
-        getWelcomeText = `Your tasks in trash`
-
-    }
-
-
-
+    const {user, setUser} = useAuthContext();
+    const {data: profile} = useUserProfile(user?.id)
+    const {openCreatePlan, closeCreatePlan, openCreatePlanModal} = useAppContext()
     return (
         <Layout>
-            <ProfileLayout>
-                <Container>
+            <Container align={'flex-start'}>
 
-                    {!pageType && selectedTab !== 'friends' && (
-                       <>
-                           <FlexBox justify={'space-between'}>
-                               <div className={'welcome-text'}>  {getWelcomeText} </div>
-                               <Button onClick={() => setCreateNewTask(true)}> New Task</Button>
+                <SectionContainer>
+                    <div className={'section-title'}>
+                        Calendar
+                    </div>
+                    <div>
+                        <Calendar
+                            localizer={localizer}
+                            events={[]}
+                            startAccessor="start"
+                            endAccessor="end"
+                            style={{ height: 400, width: 400, color: 'white' }}
+                        />
+                    </div>
+                </SectionContainer>
+                <SectionContainer height={400}>
+                    <FlexBox justify={'space-between'}>
+                        <div className={'section-title'}>
+                            Plans
+                        </div>
+                        <Button onClick={openCreatePlanModal}>
+                            New
+                        </Button>
+                    </FlexBox>
+                    <PlansSection list={profile?.plans} />
 
-                           </FlexBox>
+                </SectionContainer>
 
-                       </>
-                        )}
-                    {contentToRender}
-
-                </Container>
-            </ProfileLayout>
+                {!!openCreatePlan && <CreatePlanModal />}
+            </Container>
         </Layout>
     )
 }
 
+
 export default UserProfilePage;
 
-const Container = styled.div`
-  padding: 24px 36px;
-  background-color: ${theme.jet};
-  height: 100vh;
-  width: 100vw;
+const Container = styled(FlexBox)``
 
-.welcome-text {
-  font-size: 24px;
-  color: ${theme.steel10};
-  letter-spacing: 1px;
+
+const SectionContainer = styled.div`
+  min-width: ${props => props.width ? `${props.width}px` : '200px'}; /* Default height is set to 300px, change it to your preferred default height */
+  max-width: 500px;
+  min-height: ${props => props.height ? `${props.height}px` : '300px'}; /* Default height is set to 300px, change it to your preferred default height */
+  margin: 12px;
+  padding: 12px;
+  border: 1px solid white;
   
-  
-}
-  
-.tab-specific-text {
-  color: ${theme.ashGrey};
-  font-size: 14px;
-  
-}  
+  .section-title {
+    color: white;
+    margin-bottom: 18px;
+    font-size: 18px;
+  }
 `

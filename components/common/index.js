@@ -5,6 +5,11 @@ import styled from "styled-components"
 export const Gap = styled.div`
   height: ${props => props.gap}px;
 `
+
+export const MenuSectionTitle = styled.div`
+  font-size: 16px;
+  font-weight: 600;
+`
 export const ColorScrollBar = (color = 'white', barWidth = 6, track = 'transparent') => `
 /* width */
 ::-webkit-scrollbar {
@@ -55,4 +60,21 @@ export const FlexBox  = styled.div`
   flex: ${props => props.flex === undefined ? 1 : props.flex};
   gap: ${props => props.gap + 'px' || 'unset'};
   ${props => props.scrollX ? {"overflowX": "auto"} : {}};
+`
+
+
+export const NoScrollbar = `
+  &::-webkit-scrollbar {
+    display: none !important;
+  }
+  -ms-overflow-style: none !important;  /* IE and Edge */
+  scrollbar-width: none !important;  /* Firefox */
+  
+  * {
+     &::-webkit-scrollbar {
+      display: none !important;
+     }
+    -ms-overflow-style: none !important;  /* IE and Edge */
+    scrollbar-width: none !important;  /* Firefox */
+  }
 `
