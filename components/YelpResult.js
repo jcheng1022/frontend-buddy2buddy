@@ -11,7 +11,7 @@ import {useAppContext} from "@/context/app.context";
 
 const YelpResult = ({business, minimal = false}) => {
     const  {user} = useAuthContext();
-    const {openAddToPlanModal, closeAddToPlanModal} = useAppContext();
+    const {openAddToPlanModal, openLoginModal, setShowAddToPlanModal} = useAppContext();
     const client = useQueryClient();
     const [isLoading, setIsLoading] = useState(false)
     const [isInterested, setIsInterested] = useState(business.isInterested)
@@ -28,6 +28,11 @@ const YelpResult = ({business, minimal = false}) => {
     };
 
     const handleInterestClick = (interestId) => async () => {
+
+        if (!user) {
+            return openLoginModal();
+        }
+
         const type = !isInterested ? 'add' : 'remove'
         setIsLoading(true)
 
@@ -51,8 +56,8 @@ const YelpResult = ({business, minimal = false}) => {
         })
     }
 
-    const handleAddToPlan = (businessId) =>  () => {
-        openAddToPlanModal();
+    const handleAddToPlan = (business) =>  () => {
+        setShowAddToPlanModal(business);
     }
 
     const imgUrl = minimal ? business?.businessMeta?.imgUrl : business?.image_url
@@ -90,7 +95,7 @@ const YelpResult = ({business, minimal = false}) => {
                             {/*<Tooltip title={}>*/}
 
 
-                                <PlusSquare  onClick={ handleAddToPlan(business.id)}/>
+                                <PlusSquare  onClick={ handleAddToPlan(business)}/>
                             {/*</Tooltip>*/}
 
                             <Tooltip title={`${isInterested ? 'Remove from' : 'Add to'} interests`}>
@@ -123,7 +128,12 @@ const Container = styled(FlexBox)`
   padding: 12px;
   margin: 18px 0px;
   min-width: 250px;
-  max-width: 400px;
+  border-bottom: 2px solid #e6e6e6;
+  &:hover {
+  border: 2px solid #e6e6e6;
+}
+  //max-width: 400px;
+  
   border-radius: 12px;
   //max-width: 250px;
   
@@ -152,7 +162,7 @@ const Container = styled(FlexBox)`
     padding: 4px;
     min-height: 75px;
     max-height: 75px;
-    color: #e8e8e8;
+    color: black;
     //background-color: #e8e8e8;
     border-bottom-left-radius: 12px;
     border-bottom-right-radius: 12px;

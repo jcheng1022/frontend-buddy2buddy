@@ -20,7 +20,6 @@ const CreatePlanModal = () => {
             name: ''
         },
     });
-    console.log(`buddies, modal`, buddies)
     const client = useQueryClient();
     const [isLoading, setIsLoading] = useState(false)
 

@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import {Star} from "react-feather";
 import {Avatar, Tooltip} from "antd/lib";
 import { AntDesignOutlined, UserOutlined } from '@ant-design/icons';
-import {FlexBox} from "@/components/common";
+import {FlexBox, Gap} from "@/components/common";
 
 
 const PlanPage = () => {
@@ -71,6 +71,23 @@ const PlanPage = () => {
                     <div className={'creator-name'}> Created by {plan?.creator?.name}</div>
 
                 </div>
+
+                <Gap gap={24}/>
+
+                <EventsContainer>
+                    {plan?.planEvents?.map((event, index) => {
+                        const {businessName, img, businessUrl} = event.data;
+                        return (
+                            <div key={`event-${index}`}>
+                                <a href={businessUrl} target={'_blank'} className={'business-name'}>{businessName}</a>
+                                <div className={'business-img-container'}>
+                                    <img className={'business-img'} src={img} alt={businessName} style={{width: 200, height: 200}}/>
+                                </div>
+                            </div>
+                        )
+                    })}
+                </EventsContainer>
+
             </Container>
         </Layout>
     )
@@ -81,7 +98,7 @@ export default PlanPage;
 
 const Container = styled.div`
   padding: 12px;
-  color: white;
+  //color: white;
   width: 100%;
   
   .basic-info {
@@ -107,4 +124,17 @@ const Container = styled.div`
   }
   
   
+`
+
+
+const EventsContainer = styled.div`
+  
+    .business-name {
+      color: black;
+      text-decoration: none;
+    }
+  
+  .business-name:hover {
+    text-decoration: underline;
+  }
 `

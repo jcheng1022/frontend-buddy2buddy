@@ -11,11 +11,9 @@ const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY, {
 const NotificationProvider = ({children}) => {
     const { user} = useAuthContext();
     const client = useQueryClient();
-    console.log(`provider`)
 
     useEffect(() => {
         if (!!user?.id) {
-            console.log(`id exists`)
             const channelName = `user-${user?.id}`;
             const channel = pusher.subscribe(channelName);
 

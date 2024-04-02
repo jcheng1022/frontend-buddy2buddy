@@ -35,6 +35,17 @@ export const useUserProfile = ( userId = null)  => {
     });
 };
 
+export const useUserPlans = ( userId = null)  => {
+
+    const queryKey = ['plans', userId];
+
+    return useQuery(queryKey, () => APIClient.api.get(`/user/plans`, { }), {
+        enabled: !!userId,
+        ...defaultQueryProps,
+    });
+};
+
+
 export const useUserNotifications = ( userId = null)  => {
 
     const queryKey = ['notifications', userId];

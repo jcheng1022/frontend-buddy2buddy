@@ -29,7 +29,6 @@ const ArrowScroll = ({ children, rootClass, scrollAmount, height = 200, paginate
     const onMouseMove = e => {
         const { clientX, scrollX } = state
         if (state.isDown && e.clientX) {
-            console.log('Moving')
             ref.current.scrollLeft = -1 * (scrollX + e.clientX - clientX)
             setState({
                 ...state,

@@ -19,14 +19,12 @@ const YelpSearch = () => {
     const {setYelpResults, setIsSearching} = useAppContext();
     const {user} = useAuthContext();
     const LOCATION_STORAGE_KEY = `${user?.id}@location`
-    // const userZip = Storage.getItem(ZIP_STORAGE_KEY)
 
 
     useEffect(() => {
         const fetchData = async () => {
             if ('geolocation' in navigator && !!user) {
                 setFetchingLocation(true)
-                console.log(`FETCH LOC SHOULD BE TRUE`)
                 navigator.geolocation.getCurrentPosition(async ({ coords }) => {
                     const { latitude, longitude } = coords;
 
@@ -39,12 +37,9 @@ const YelpSearch = () => {
                             zip: ''
                         }))
                     }
-                    console.log(1, latitude, coordinates?.latitude, longitude, coordinates?.longitude)
                     if (latitude.toFixed(3) === coordinates?.latitude.toFixed(3) && longitude.toFixed(3) === coordinates?.longitude.toFixed(3)) {
-                        console.log(2)
 
                         if (!!coordinates?.zip) {
-                            console.log(33,coordinates.zip)
                             setInterestForm({
                                 ...interestForm,
                                 location: coordinates?.zip
@@ -61,8 +56,6 @@ const YelpSearch = () => {
                             zip: ''
                         }))
                     }
-
-                    console.log(3)
 
                     const apiUrl = `https://api.geoapify.com/v1/geocode/reverse?lat=${latitude}&lon=${longitude}&apiKey=${process.env.NEXT_PUBLIC_GEOAPIFY_KEY}`;
 
@@ -89,11 +82,6 @@ const YelpSearch = () => {
                         }
 
 
-                        // setInterestForm({
-                        //     ...interestForm,
-                        //     location: zip
-                        // })
-
 
                     } catch (error) {
                         if (fetchingLocation){
@@ -106,16 +94,7 @@ const YelpSearch = () => {
         };
 
         fetchData();
-        // const zip = Storage.getItem(ZIP_STORAGE_KEY)
-        // if (!zip) {
-        //     fetchData();
-        // } else {
-        //
-        //         setInterestForm({
-        //             ...interestForm,
-        //             location: userZip
-        //         })
-        // }
+
 
 
     }, [user]);

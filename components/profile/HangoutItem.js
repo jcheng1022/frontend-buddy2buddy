@@ -50,7 +50,6 @@ export default PlanItem;
 
 const Container = styled.div`
   border: 1px solid white;
-color: white;
   margin: 8px 0px;
   min-width: 200px;
   max-width: 200px;

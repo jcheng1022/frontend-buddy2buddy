@@ -12,6 +12,7 @@ import {useEffect, useMemo, useState} from "react";
 import APIClient from '../services/api'
 import dayjs from "dayjs";
 import SearchComponent from "@/components/SearchComponent";
+import {useSearchParams} from "next/navigation";
 
 const Header = () => {
     const router = useRouter();
@@ -83,7 +84,6 @@ const Header = () => {
                                            return APIClient.api.patch(`/user/buddies/${item?.id}`, {
                                                status: response
                                            }).then(async () => {
-                                               console.log(`try refetching new friends list`, user?.id, response)
                                                await client.refetchQueries(['friends', user?.id])
                                            })
                                        }
@@ -200,7 +200,7 @@ export default Header;
 
 const Container = styled(FlexBox)`
 
-  
+  max-width: 100%;
   
     padding: 12px;
   background-color: #2b2b2b;

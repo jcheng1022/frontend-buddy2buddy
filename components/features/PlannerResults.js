@@ -11,41 +11,15 @@ import {motion} from 'framer-motion'
 const PlannerResults = () => {
     const {results, setResults} = usePlannerContext();
 
-    console.log(`loaded`)
     const ResultList = () => {
-        const [expandSettings, setExpandSettings] = useState(false)
         const [finalResults, setFinalResults] = useState(null)
         useEffect(() => {
             setFinalResults(results)
         }, [])
 
-        const handleSortChange = (val) => {
-            setFinalResults((prevResults) => {
-                let sortedResults;
 
-                if (val === 'ranking') {
-                    sortedResults = [...prevResults].sort((a, b) => b.rating - a.rating);
-                } else if (val === 'distance') {
-                    sortedResults = [...prevResults].sort((a, b) => a.distance - b.distance);
-                } else {
-                    // Handle other cases if needed
-                    sortedResults = [...prevResults];
-                }
 
-                return sortedResults;
-            });
-        };
 
-        const sortOptions = [
-            {
-                label: 'Ranking (stars)',
-                value: 'ranking',
-            },
-            {
-                label: 'Distance',
-                value: 'distance',
-            },
-        ]
         return (
             <div>
                 <FlexBox justify={'space-between'}>
@@ -53,22 +27,9 @@ const PlannerResults = () => {
                         <div className={'result-title'}> Results</div>
                         <div className={'result-subtitle'}> Add places to list</div>
                     </div>
-                    {/*<div className={'filter-icon'} onClick={() => setExpandSettings((prev) => !prev)}>*/}
-                    {/*    <Filter />*/}
-                    {/*</div>*/}
+
                 </FlexBox>
-                {/*{expandSettings && (*/}
-                {/*    <div>*/}
-                {/*        <div>*/}
-                {/*            <span> Sort by</span>*/}
-                {/*            <Select className={'filter-select'}*/}
-                {/*                    onChange={handleSortChange}*/}
-                {/*                    options={sortOptions} />*/}
 
-                {/*        </div>*/}
-
-                {/*    </div>*/}
-                {/*)}*/}
                 <FlexBox
                          gap={12}
                         justify={'space-around'}
@@ -84,11 +45,7 @@ const PlannerResults = () => {
                             >
                                 <YelpResult business={result}/>
                             </motion.div>
-                            // <ResultItem key={`result-item-${index}`}>
-                            //     <div>
-                            //         {result.name}
-                            //     </div>
-                            // </ResultItem>
+
                         )
                     })}
                 </FlexBox>
@@ -98,21 +55,14 @@ const PlannerResults = () => {
 
     return (
         <Container>
-            {/*<motion.div*/}
-            {/*    animate={{ x: 100 }}*/}
-            {/*    transition={{ delay: 1 }}*/}
-            {/*>*/}
+
             {results ?
-                // <motion.div
-                //     animate={{ x: 100 }}
-                //     transition={{ delay: 1 }}
-                // >
+
                 <ResultList/>
-                // </motion.div>
+
                  :
                 <div> no </div>}
 
-            {/*</motion.div>*/}
         </Container>
     )
 }

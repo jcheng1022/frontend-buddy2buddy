@@ -16,7 +16,7 @@ const Layout = ({children, isInterest = false}) => {
                <Header/>
 
             <GlobalAntdLayout>
-                <LeftSideNav/>
+                {/*<LeftSideNav/>*/}
                 {children}
 
                 {!!isInterest && (
@@ -28,14 +28,14 @@ const Layout = ({children, isInterest = false}) => {
 
 
             </GlobalAntdLayout>
-            <Footer style={{
-                // textAlign: 'center',
-                color: '#fff',
-                backgroundColor: '#2b2b2b',
-            }}>
-                Built by Jacky
+            {/*<Footer style={{*/}
+            {/*    // textAlign: 'center',*/}
+            {/*    color: '#fff',*/}
+            {/*    backgroundColor: '#2b2b2b',*/}
+            {/*}}>*/}
+            {/*    Built by Jacky*/}
 
-            </Footer>
+            {/*</Footer>*/}
 
 
         </>
@@ -48,10 +48,10 @@ export default Layout;
 
 
 const GlobalAntdLayout = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  max-width: 100%;
+  //display: flex;
+  //flex-direction: row;
+  //align-items: flex-start;
+  //max-width: 100%;
   overflow: hidden;
   width: 100%;
   //padding: 12px;

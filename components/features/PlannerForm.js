@@ -389,7 +389,6 @@ const PlannerForm = () => {
 
     const handleCustomCategory = (e) => {
         const customCategoryIndex = planningForm.categories.findIndex((category) => category.isCustom);
-        console.log(customCategoryIndex, 2323)
         if (customCategoryIndex !== -1) {
             if (e.target.value.length === 0) {
                 setValue(`categories[${customCategoryIndex}].category`, '');
